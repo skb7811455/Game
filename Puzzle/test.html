@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0">
+    <style type="text/css">
+      body{
+         text-align: center;
+
+      }
+    	#main {
+    		width: 580px;
+    		height: 580px;
+        border: 10px solid rgb(7, 189, 181);
+        border-radius: 10px;
+        box-shadow:2px 5px  20px rgba(0,0,0,0.5) ;
+        display: inline-block; 
+        
+      }
+    	canvas {
+    		margin: 0px;
+        border: none;
+        vertical-align:middle;   
+
+    	}
+      .imgWrapper{
+        width: 150px;
+        height: 150px;
+        margin: 20px;
+        display: inline-block;
+      }
+      img{
+        width: 100%;
+        height: 100%;  
+        transition: All 0.2s ease-in-out;
+        -webkit-transition: All 0.2s ease-in-out;
+        -moz-transition: All 0.2s ease-in-out;
+        -o-transition: All 0.2s ease-in-out;    
+      }
+      img:hover{
+        transform:  scale(2.5);
+          -webkit-transform:  scale(2.5);
+          -moz-transform:  scale(2.5);
+          -o-transform:  scale(2.5);
+          -ms-transform:  scale(2.5);
+      }
+      p{
+        margin: 0px;
+      }
+      .form{
+        width: 400px;
+        height: 600px;
+        display: inline-block;
+        vertical-align: top;
+        border-radius: 10px;
+        background:url(./bear.jpg) no-repeat;
+        background-size:100% 100%; 
+        box-shadow:2px 5px  20px rgba(0,0,0,0.2);
+        margin: 0 20px;
+      }
+      #main :hover{
+        box-shadow: 2px 5px  20px #000 ;
+      }
+      .choice{
+        display: inline-block;
+        padding: 0 80px;
+      }
+
+      button{
+        
+        margin: 0.5rem 1rem;
+        height: 2rem;
+        width: 5rem;
+        line-height: 2rem;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        font-family: "Microsoft YaHei", normal;
+        cursor: pointer;
+        background: rgb(0,0,0);
+        border-width: 0px;
+        border-radius: 5px;
+        border-style: initial;
+        border-color: initial;
+        border-image: initial;
+      }  
+      #timer{
+        color: red;
+      }
+      #random{
+            transition: All 0.4s ease-in-out;
+            -webkit-transition: All 0.4s ease-in-out;
+            -moz-transition: All 0.4s ease-in-out;
+            -o-transition: All 0.4s ease-in-out;
+      }
+      #random:hover{
+            transform: rotate(360deg);
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+      }
+      #easy{
+        background: rgb(18, 70, 180);
+      }
+      #normal{
+        background: rgb(18, 198, 189);
+      } 
+      #difficult{
+        background: rgb(189, 7, 17);
+      }
+      #hard{
+        background: rgb(189, 7, 190);
+      } 
+      .game{
+        margin: 0 auto;
+      }
+      #start{     
+        width: 210px;
+        height: 40px;
+        line-height: 38px;
+        font-size: 22px;
+        background: rgb(7, 189, 181); 
+      }
+      .record{
+        margin: 0.5rem 0.5rem;
+        display: inline-block;
+        color: #ffc009;
+        font-size: 1.2rem;
+      }
+      
+    </style>
+</head>
+    <body>
+      <div class="game">
+    	  <div id="main" class="main">  
+    	   </div>  
+        <div class="form">
+          <h2>在线拼图游戏</h2>
+          <p>最高纪录</p>
+          <span class="record">简单:<span id="easyRecord">60</span>s</span>
+          <span class="record">一般:<span id="normalRecord">60</span>s</span>
+          <span class="record">困难:<span id="difficultRecord">60</span>s</span>
+          <span class="record">地狱:<span id="hardRecord">60</span>s</span>
+          <p>剩余时间: <span id="timer">60</span>s</p>
+          <div class="imgWrapper">
+    	       <img src="./img0.jpg" id="img">
+          </div>
+          <div class="choice" id="choice">
+            <button class="mode" id="easy">简单</button>
+            <button class="mode" id="normal">一般</button>
+            <button class="mode" id="difficult">困难</button>
+            <button class="mode" id="hard">地狱</button>
+            <button class="operate" id="random">打乱</button>
+            <button class="operate"id="change">换图</button>
+            <button class="operate"id="start">开始</button>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+
+      </div>
+    </body>
+    <script>
+      var sign=false; //移动端点击控制标志
+      var imgs =[     //内置的图片库路径数组
+        "./img0.jpg",
+        "./img1.jpg",
+        "./img2.jpg",
+        "./img3.jpg",
+        "./img4.jpg",
+        "./img5.jpg",
+        "./img6.jpg",
+        "./img7.jpg",
+        "./img8.jpg",
+        "./img9.jpg",
+        "./img10.jpg",
+        "./img11.jpg",
+        "./img12.jpg",
+        "./img14.jpg",
+        "./img18.jpg",
+        "./img19.jpg",
+        "./img20.jpg",
+        "./img21.jpg",
+        "./img22.jpg"
+      ]
+      var EventUtil = {//事件处理对象，封装了和事件相关的所有操作
+          addHandler:function(element,type,handler){
+            if(element.addEventListener){
+              element.addEventListener(type,handler,false);
+            }else if(element.attachEvent){
+              element.attachEvent("on"+type,handler);
+            }else{
+              element["on"+type]=handler;
+            }
+          },
+          removeHandler:function(element,type,handler){
+            if(event.removeEventListener){
+              element.removeEventListener(type,handler,false);
+            }else if(element.detachEvent){
+              element.detachEvent("on"+type,handler);
+            }else{
+              element["on"+type]=null;
+            }
+          },
+          getEvent:function(event){
+            return event?event:window.event;
+          },
+          getTarget:function(event){
+            return event.target||event.srcElement;
+          },
+          preventDefault:function(event){
+            if(event.preventDefault){
+              event.preventDefault();
+            }else{
+              event.returnValue=false;
+            }
+          },
+          stopPropagation:function(event){
+            if(event.stopPropagation){
+              event.stopPropagation();
+            }else{
+              event.cancelBubble=true;
+            }
+          }
+      }
+   		function createBox(id,side,rightX,rightY){//box对象的工厂函数,box对象包含自身ID,分割图片的信息,分割的大小、位置以及所在图片框的id。
+   			var o=new Object();
+   			o.ID=id;
+   			o.side=side;
+   			o.rightX=rightX;
+   			o.rightY=rightY;
+   			o.posX=rightX;
+   			o.posY=rightY;
+   			o.canvasId=id;
+   			
+   			o.getId=function(){
+   				return this.ID;
+   			}
+   			o.getCanvasId=function(){
+   				return this.canvasId;
+   			}
+   			o.setCanvasId=function(newID){
+   				 this.canvasId=newID;
+   			}
+   			o.getPositionX=function(){
+   				return this.posX;
+   			}
+   			o.getPositionY=function(){
+   				return this.posY;
+   			}
+   			o.setPostionXY=function(x,y){
+   				this.posX=x;
+   				this.posY=y;
+   				//this.dom.style.left=x+"px";
+   				//this.dom.style.top=y+"px";
+   			}
+   			o.check=function(){//检查图片框的id与box的id是否一致
+   				if(this.canvasId==this.ID){
+   					return true;
+   				}else{
+   					return false;
+   				}
+   			}
+        
+   			return o;
+   		}
+   		function createWrapper(side,posX,posY,dom){
+      //拼图盘对象的工厂函数,对象包含了图片框数组、边长、位置、以及对应dom
+   			var o=new Object();
+   			o.side=side;
+   			o.posX=posX;
+   			o.canvasArr=[];
+   			o.posY=posY;
+   			o.dom=dom;
+      
+   			o.init=function(){
+   				dom.style.left=this.posX;
+   				dom.style.top=this.posY;
+   				dom.style.width=this.side;
+   				dom.style.height=this.side;
+   				dom.style.position="relative";
+   			}
+   			o.addCanvas=function(canvas){
+   				this.canvasArr.push(canvas);
+   			}
+   			o.swapBox=function(box1,box2,img){//互换两个box的所在图片框id,互换图片框的box的id,通知两个图片框重新绘图
+   				var canvasID2=box2.getCanvasId();
+   				var canvasID1=box1.getCanvasId();
+   				this.canvasArr[canvasID1].draw(box2,img);
+   				box2.setCanvasId(canvasID1);
+   				this.canvasArr[canvasID2].draw(box1,img);
+   				box1.setCanvasId(canvasID2);
+
+          this.canvasArr[canvasID1].setDomId(box2.getId());
+          this.canvasArr[canvasID2].setDomId(box1.getId());
+   			}
+        o.random=function(boxes,img){          
+           for(var i=0;i<boxes.length;i++){
+              var r1=Math.floor(Math.random()*boxes.length);
+              var r2=Math.floor(Math.random()*boxes.length);
+              this.swapBox(boxes[r1],boxes[r2],img);
+           }
+        }
+   			o.getPosX=function(){
+   				return this.posX;
+   			}
+   			o.getPosY=function(){
+   				return this.posY;
+   			}
+   			o.getSide=function(){
+   				return this.side;
+   			}
+   			return o;
+   		}
+   		function createCanvas(id,side,posX,posY,dom,divDom){
+      //图片框数组的工厂函数,图片框的id、边长、位置。Canvas无法绑定点击事件，所以在其上面加一个div,对div绑定事件.
+   			var o=new Object();
+   			o.id=id;
+   			o.side=side;
+   			o.posX=posX;
+   			o.posY=posY;
+   			o.dom=dom;
+        o.divDom=divDom;
+        o.setDomId=function(id){
+          this.divDom.id=id;
+        }
+        o.getDomId=function(){
+          return this.divDom.id;
+        }
+        o.init=function(){
+          dom.width=this.side;
+          dom.height=this.side;
+          divDom.id=id;
+          divDom.style.draggable="true";
+          divDom.style.left=this.posX+"px";
+          divDom.style.top=this.posY+"px";
+          divDom.width=this.side;
+          divDom.height=this.side;
+          divDom.style.border="1px blue solid ";
+          divDom.style.minHeight=this.side+"px";
+          divDom.style.minWidth=this.side+"px";
+          divDom.style.position="absolute";
+        }
+   			
+   			o.draw=function(box,img){//绘图函数,根据传入的box的分割图片信息绘图
+         
+    			var context=dom.getContext("2d");
+    			context.drawImage(img,box.getPositionX(),box.getPositionY(),side,side,0,0,side,side);
+   			}
+   			return o;
+   		}
+      function check(boxes){//检查所有拼图是否放回原位，即box的id与图片框id对应
+          for(var i=0;i<boxes.length;i++){
+            if(!boxes[i].check()) return false;
+          }
+          return true;
+      }      
+      function freshDom(){//移除上一局的拼图盘dom,新增一个拼图盘dom
+          var main=document.createElement("div");
+          main.id="main";
+          main.class="main";
+
+          document.getElementsByClassName("game")[0].replaceChild(main,document.getElementById("main"));
+      }
+      function createRecord(easyDom,normalDom,difficultDom,hardDom){
+        //记录对象的工厂函数,包含四种记录对应的dom和记录有关的操作
+        var o=new Object();
+        o.easyDom=easyDom;
+        o.normalDom=normalDom;
+        o.difficultDom=difficultDom;
+        o.hardDom=hardDom;
+        o.showRecord=function(){
+          localStorage.easyRecord?easyDom.firstChild.nodeValue=localStorage.easyRecord:0;
+          localStorage.normalRecord?normalDom.firstChild.nodeValue=localStorage.normalRecord:0;
+          localStorage.difficultRecord?difficultDom.firstChild.nodeValue=localStorage.difficultRecord:0;
+          localStorage.hardRecord?hardDom.firstChild.nodeValue=localStorage.hardRecord:0;
+        }
+        o.savaUserRecord=function(newRecord,n){
+        //根据传入的分割行数存储相应的记录,localStorage在关闭浏览器后有效
+          if(newRecord!=0){
+           switch(n){
+              case 3:
+              if(!localStorage.easyRecord||newRecord<localStorage.easyRecord){
+                localStorage.easyRecord=newRecord;
+                this.showRecord();
+                //easyDom.firstChild.nodeValue=localStorage.easyRecord;
+                
+              }
+              break;
+              case 4:
+              if(!localStorage.normalRecord||newRecord<localStorage.normalRecord){
+                localStorage.normalRecord=newRecord;
+                this.showRecord();
+               // normalDom.firstChild.nodeValue=localStorage.normalRecord;                          
+              }
+              break;
+              case 5:
+              if(!localStorage.difficultRecord||newRecord<localStorage.difficultRecord){
+                localStorage.difficultRecord=newRecord; 
+                this.showRecord();
+               // difficultDom.firstChild.nodeValue=localStorage.difficultRecord;           
+              }
+              break;
+              case 8:
+              if(!localStorage.hardRecord||newRecord<localStorage.hardRecord){
+                localStorage.hardRecord=newRecord;
+                this.showRecord();
+               // hardDom.firstChild.nodeValue=localStorage.hardRecord;
+              }
+              break;
+            }
+          }
+        }
+          return o;
+      }
+      function createTime(timeDom,totalTime){
+      //时间对象的工厂函数，包含计时器和初始时间和剩余时间以及对应dom
+        var o=new Object();
+        o.timer=null;
+        o.timeDom=timeDom;
+        o.initTime=totalTime;
+        o.totalTime=totalTime;
+        
+        o.updateClock=function(){//剩余时间大于零时,将剩余时间-1,并更新显示dom,时间为零时清除计时器
+          if(totalTime>0){
+              totalTime-=1;
+              timeDom.firstChild.nodeValue=totalTime;
+            }else{
+              clearInterval(timer);
+          }
+        }
+        o.startTime=function(time){//开始计时函数,设置1s执行一次updateClock函数
+            clearInterval(timer);
+            //totalTime=60;
+            totalTime=time;
+            initTime=time;
+           // timeDom=document.getElementById("timer");
+            timer=setInterval(this.updateClock,1000); 
+        }
+        o.getTotalTime=function(){
+            return totalTime;
+        }
+        o.getInitTime=function(){
+            return this.initTime;
+        }
+        return o;
+      }
+      function createGame(timeObject,recorder){
+      //Game对象的工厂函数，主要包含拼图盘对象、图片对象、box对象数组、计时对象和记录对象
+          var o=new Object();
+          o.currentBox=null;
+          o.img = null; 
+          o.wrapper=null;
+          o.boxes=null;
+          o.timeObject=timeObject;
+          o.recorder=recorder;
+          o.key=4;
+          o.changeImg=function(){
+            for(var i=0;i<imgs.length;i++){
+              var r=Math.floor(Math.random()*imgs.length);
+              img.src=imgs[r];
+            }
+          }
+          o.startTime=function(totalTime){
+            timeObject.startTime(totalTime);
+          }
+          o.init=function(n){                
+            
+            key=n;
+
+            var img = document.getElementById("img"); 
+            var wrapDom=document.getElementById("main");
+            var wrapSide=580;    
+
+            wrapper=new createWrapper(wrapSide,0,0,wrapDom);
+            wrapper.init();
+            var side=wrapSide/n;
+            boxes=[];
+            var  k=0;
+            for(var i=0;i<n;i++){//计算分割的图片的边长和位置,动态创建图片框对象和box对象
+              var posY=side*i;
+                for(var j=0;j<n;j++){
+                  var posX=side*j;
+                  var divDom = document.createElement('div');
+                  var canvasDom = document.createElement('canvas');
+                  var canvas=createCanvas(k,side,posX,posY,canvasDom,divDom);
+                  canvas.init();
+                  wrapper.addCanvas(canvas);            
+                  this.addDivAction(divDom);                 
+                  var box=createBox(k,side,posX,posY);
+                  k++;
+                  boxes.push(box);
+                  canvas.draw(box,img);
+                  wrapDom.appendChild(divDom);
+                  wrapDom.appendChild(canvasDom);
+                }
+            } 
+            wrapper.random(boxes,img);        
+          }
+          o.addDivAction=function(divDom){//为图片框上对应的div绑定各种事件
+                  EventUtil.addHandler(divDom,"touchstart",function(event){
+                    if(sign==false){
+                    currentBox=event.target.id;
+                    sign=true;
+                    }     
+                  });
+                  EventUtil.addHandler(divDom,"touchend",function(event){
+                    if(currentBox!=event.target.id&&sign==true){
+                       wrapper.swapBox(boxes[currentBox],boxes[event.target.id],img);
+                       var totalTime=timeObject.getTotalTime();
+                       var initTime=timeObject.getInitTime();
+                      if(totalTime>0&&check(boxes)){
+                        recorder.savaUserRecord(initTime-totalTime,key);
+                        alert("挑战成功！"); 
+                      }else if(totalTime==0){
+                        alert("超时,挑战失败！");
+                      }
+                      sign=false;
+                    }     
+                  });
+                  EventUtil.addHandler(divDom,"dragstart",function(event){
+                    currentBox=event.target.id;      
+                  });
+                  EventUtil.addHandler(divDom,"dragover",function(event){
+                    EventUtil.preventDefault(event);
+                  });
+                  EventUtil.addHandler(divDom,"dragenter",function(event){
+                    EventUtil.preventDefault(event);
+                  });
+                  EventUtil.addHandler(divDom,"drop",function(event){
+                    EventUtil.preventDefault(event);
+                      wrapper.swapBox(boxes[currentBox],boxes[event.target.id],img);
+                      var totalTime=timeObject.getTotalTime();
+                      var initTime=timeObject.getInitTime();
+                      if(check(boxes)&&totalTime>0){
+                        recorder.savaUserRecord(initTime-totalTime,key);
+                        alert("挑战成功！");  
+                      }else if(totalTime==0){
+                        alert("超时,挑战失败！");
+                      }
+                  });
+          }
+          return o;
+      }        
+      function createButtons(buttonDiv,game){
+        var o=new Object(); 
+        o.buttonDiv=buttonDiv;
+        o.game=game;
+        o.clickHandler=function(event){            
+            switch(event.target.id){
+                  case "easy":
+                    freshDom();
+                    game.init(3);
+                    break;
+                  case "normal":
+                    freshDom();
+                    game.init(4);
+                    break;
+                  case "difficult":
+                    freshDom();
+                    game.init(5);
+                    break;
+                  case "hard":
+                    freshDom();
+                    game.init(8);
+                    break;
+                  case "random":
+                    wrapper.random(boxes,img);
+                    break;
+                  case "change":
+                    game.changeImg();
+                    break;
+                  case "start":
+                    game.startTime(60);
+                    wrapper.random(boxes,img);
+                    break;
+            };      
+        }  
+        o.init=function(){
+          EventUtil.addHandler(buttonDiv,"click",this.clickHandler)
+        }
+        return o;
+      }
+    	window.onload=function(){
+
+        var timeDom=document.getElementById("timer"); 
+        var timeObject=createTime(timeDom,60);  
+
+        var easyDom=document.getElementById("easyRecord");
+        var normalDom=document.getElementById("normalRecord");
+        var difficultDom=document.getElementById("difficultRecord");
+        var hardDom=document.getElementById("hardRecord");
+        var recorder=createRecord(easyDom,normalDom,difficultDom,hardDom);
+
+        var game=createGame(timeObject,recorder);
+        game.init(4);
+
+        var buttonDiv=document.getElementById("choice");
+        var buttons=createButtons(buttonDiv,game);
+        buttons.init();       
+        recorder.showRecord();
+    	}
+    </script>
+    </body>
+</html>
