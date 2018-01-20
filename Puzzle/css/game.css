@@ -1,0 +1,124 @@
+      body{
+         text-align: center;
+
+      }
+      #main {
+        width: 580px;
+        height: 580px;
+        border: 10px solid rgb(7, 189, 181);
+        border-radius: 10px;
+        box-shadow:2px 5px  20px rgba(0,0,0,0.5) ;
+        display: inline-block; 
+        
+      }
+      canvas {
+        margin: 0px;
+        border: none;
+        vertical-align:middle;   
+
+      }
+      .imgWrapper{
+        width: 150px;
+        height: 150px;
+        margin: 20px;
+        display: inline-block;
+      }
+      img{
+        width: 100%;
+        height: 100%;  
+        transition: All 0.2s ease-in-out;
+        -webkit-transition: All 0.2s ease-in-out;
+        -moz-transition: All 0.2s ease-in-out;
+        -o-transition: All 0.2s ease-in-out;    
+      }
+      img:hover{
+        transform:  scale(2.5);
+          -webkit-transform:  scale(2.5);
+          -moz-transform:  scale(2.5);
+          -o-transform:  scale(2.5);
+          -ms-transform:  scale(2.5);
+      }
+      p{
+        margin: 0px;
+      }
+      .form{
+        width: 400px;
+        height: 600px;
+        display: inline-block;
+        vertical-align: top;
+        border-radius: 10px;
+        background:url(../imgs/bear.jpg) no-repeat;
+        background-size:100% 100%; 
+        box-shadow:2px 5px  20px rgba(0,0,0,0.2);
+        margin: 0 20px;
+      }
+      #main :hover{
+        box-shadow: 2px 5px  20px #000 ;
+      }
+      .choice{
+        display: inline-block;
+        padding: 0 80px;
+      }
+
+      button{
+        
+        margin: 0.5rem 1rem;
+        height: 2rem;
+        width: 5rem;
+        line-height: 2rem;
+        text-align: center;
+        color: rgb(255, 255, 255);
+        font-family: "Microsoft YaHei", normal;
+        cursor: pointer;
+        background: rgb(0,0,0);
+        border-width: 0px;
+        border-radius: 5px;
+        border-style: initial;
+        border-color: initial;
+        border-image: initial;
+      }  
+      #timer{
+        color: red;
+      }
+      #random{
+            transition: All 0.4s ease-in-out;
+            -webkit-transition: All 0.4s ease-in-out;
+            -moz-transition: All 0.4s ease-in-out;
+            -o-transition: All 0.4s ease-in-out;
+      }
+      #random:hover{
+            transform: rotate(360deg);
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+      }
+      #easy{
+        background: rgb(18, 70, 180);
+      }
+      #normal{
+        background: rgb(18, 198, 189);
+      } 
+      #difficult{
+        background: rgb(189, 7, 17);
+      }
+      #hard{
+        background: rgb(189, 7, 190);
+      } 
+      .game{
+        margin: 0 auto;
+      }
+      #start{     
+        width: 210px;
+        height: 40px;
+        line-height: 38px;
+        font-size: 22px;
+        background: rgb(7, 189, 181); 
+      }
+      .record{
+        margin: 0.5rem 0.5rem;
+        display: inline-block;
+        color: #ffc009;
+        font-size: 1.2rem;
+      }
+      

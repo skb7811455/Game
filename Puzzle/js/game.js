@@ -1,166 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>	
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0">
-    <style type="text/css">
-      body{
-         text-align: center;
-
-      }
-    	#main {
-    		width: 580px;
-    		height: 580px;
-        border: 10px solid rgb(7, 189, 181);
-        border-radius: 10px;
-        box-shadow:2px 5px  20px rgba(0,0,0,0.5) ;
-        display: inline-block; 
-        
-      }
-    	canvas {
-    		margin: 0px;
-        border: none;
-        vertical-align:middle;   
-
-    	}
-      .imgWrapper{
-        width: 150px;
-        height: 150px;
-        margin: 20px;
-        display: inline-block;
-      }
-      img{
-        width: 100%;
-        height: 100%;  
-        transition: All 0.2s ease-in-out;
-        -webkit-transition: All 0.2s ease-in-out;
-        -moz-transition: All 0.2s ease-in-out;
-        -o-transition: All 0.2s ease-in-out;    
-      }
-      img:hover{
-        transform:  scale(2.5);
-          -webkit-transform:  scale(2.5);
-          -moz-transform:  scale(2.5);
-          -o-transform:  scale(2.5);
-          -ms-transform:  scale(2.5);
-      }
-      p{
-        margin: 0px;
-      }
-      .form{
-        width: 400px;
-        height: 600px;
-        display: inline-block;
-        vertical-align: top;
-        border-radius: 10px;
-        background:url(./bear.jpg) no-repeat;
-        background-size:100% 100%; 
-        box-shadow:2px 5px  20px rgba(0,0,0,0.2);
-        margin: 0 20px;
-      }
-      #main :hover{
-        box-shadow: 2px 5px  20px #000 ;
-      }
-      .choice{
-        display: inline-block;
-        padding: 0 80px;
-      }
-
-      button{
-        
-        margin: 0.5rem 1rem;
-        height: 2rem;
-        width: 5rem;
-        line-height: 2rem;
-        text-align: center;
-        color: rgb(255, 255, 255);
-        font-family: "Microsoft YaHei", normal;
-        cursor: pointer;
-        background: rgb(0,0,0);
-        border-width: 0px;
-        border-radius: 5px;
-        border-style: initial;
-        border-color: initial;
-        border-image: initial;
-      }  
-      #timer{
-        color: red;
-      }
-      #random{
-            transition: All 0.4s ease-in-out;
-            -webkit-transition: All 0.4s ease-in-out;
-            -moz-transition: All 0.4s ease-in-out;
-            -o-transition: All 0.4s ease-in-out;
-      }
-      #random:hover{
-            transform: rotate(360deg);
-            -webkit-transform: rotate(360deg);
-            -moz-transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            -ms-transform: rotate(360deg);
-      }
-      #easy{
-        background: rgb(18, 70, 180);
-      }
-      #normal{
-        background: rgb(18, 198, 189);
-      } 
-      #difficult{
-        background: rgb(189, 7, 17);
-      }
-      #hard{
-        background: rgb(189, 7, 190);
-      } 
-      .game{
-        margin: 0 auto;
-      }
-      #start{     
-        width: 210px;
-        height: 40px;
-        line-height: 38px;
-        font-size: 22px;
-        background: rgb(7, 189, 181); 
-      }
-      .record{
-        margin: 0.5rem 0.5rem;
-        display: inline-block;
-        color: #ffc009;
-        font-size: 1.2rem;
-      }
-      
-    </style>
-</head>
-    <body>
-      <div class="game">
-    	  <div id="main" class="main">  
-    	   </div>  
-        <div class="form">
-          <h2>在线拼图游戏</h2>
-          <p>最高纪录</p>
-          <span class="record">简单:<span id="easyRecord">60</span>s</span>
-          <span class="record">一般:<span id="normalRecord">60</span>s</span>
-          <span class="record">困难:<span id="difficultRecord">60</span>s</span>
-          <span class="record">地狱:<span id="hardRecord">60</span>s</span>
-          <p>剩余时间: <span id="timer">60</span>s</p>
-          <div class="imgWrapper">
-    	       <img src="./img0.jpg" id="img">
-          </div>
-          <div class="choice" id="choice">
-            <button class="mode" id="easy">简单</button>
-            <button class="mode" id="normal">一般</button>
-            <button class="mode" id="difficult">困难</button>
-            <button class="mode" id="hard">地狱</button>
-            <button class="operate" id="random">打乱</button>
-            <button class="operate"id="change">换图</button>
-            <button class="operate"id="start">开始</button>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-
-      </div>
-    </body>
-    <script>
       var sign=false;
       var imgs =[
         "./imgs/img0.jpg",
@@ -223,76 +60,76 @@
             }
           }
       }
-   		function createBox(id,side,rightX,rightY){
-   			var o=new Object();
-   			o.ID=id;
-   			o.side=side;
-   			o.rightX=rightX;
-   			o.rightY=rightY;
-   			o.posX=rightX;
-   			o.posY=rightY;
-   			o.canvasId=id;
-   			
-   			o.getId=function(){
-   				return this.ID;
-   			}
-   			o.getCanvasId=function(){
-   				return this.canvasId;
-   			}
-   			o.setCanvasId=function(newID){
-   				 this.canvasId=newID;
-   			}
-   			o.getPositionX=function(){
-   				return this.posX;
-   			}
-   			o.getPositionY=function(){
-   				return this.posY;
-   			}
-   			o.setPostionXY=function(x,y){
-   				this.posX=x;
-   				this.posY=y;
-   				//this.dom.style.left=x+"px";
-   				//this.dom.style.top=y+"px";
-   			}
-   			o.check=function(){
-   				if(this.canvasId==this.ID){
-   					return true;
-   				}else{
-   					return false;
-   				}
-   			}
+      function createBox(id,side,rightX,rightY){
+        var o=new Object();
+        o.ID=id;
+        o.side=side;
+        o.rightX=rightX;
+        o.rightY=rightY;
+        o.posX=rightX;
+        o.posY=rightY;
+        o.canvasId=id;
         
-   			return o;
-   		}
-   		function createWrapper(side,posX,posY,dom){
-   			var o=new Object();
-   			o.side=side;
-   			o.posX=posX;
-   			o.canvasArr=[];
-   			o.posY=posY;
-   			o.dom=dom;
+        o.getId=function(){
+          return this.ID;
+        }
+        o.getCanvasId=function(){
+          return this.canvasId;
+        }
+        o.setCanvasId=function(newID){
+           this.canvasId=newID;
+        }
+        o.getPositionX=function(){
+          return this.posX;
+        }
+        o.getPositionY=function(){
+          return this.posY;
+        }
+        o.setPostionXY=function(x,y){
+          this.posX=x;
+          this.posY=y;
+          //this.dom.style.left=x+"px";
+          //this.dom.style.top=y+"px";
+        }
+        o.check=function(){
+          if(this.canvasId==this.ID){
+            return true;
+          }else{
+            return false;
+          }
+        }
+        
+        return o;
+      }
+      function createWrapper(side,posX,posY,dom){
+        var o=new Object();
+        o.side=side;
+        o.posX=posX;
+        o.canvasArr=[];
+        o.posY=posY;
+        o.dom=dom;
       
-   			o.init=function(){
-   				dom.style.left=this.posX;
-   				dom.style.top=this.posY;
-   				dom.style.width=this.side;
-   				dom.style.height=this.side;
-   				dom.style.position="relative";
-   			}
-   			o.addCanvas=function(canvas){
-   				this.canvasArr.push(canvas);
-   			}
-   			o.swapBox=function(box1,box2,img){
-   				var canvasID2=box2.getCanvasId();
-   				var canvasID1=box1.getCanvasId();
-   				this.canvasArr[canvasID1].draw(box2,img);
-   				box2.setCanvasId(canvasID1);
-   				this.canvasArr[canvasID2].draw(box1,img);
-   				box1.setCanvasId(canvasID2);
+        o.init=function(){
+          dom.style.left=this.posX;
+          dom.style.top=this.posY;
+          dom.style.width=this.side;
+          dom.style.height=this.side;
+          dom.style.position="relative";
+        }
+        o.addCanvas=function(canvas){
+          this.canvasArr.push(canvas);
+        }
+        o.swapBox=function(box1,box2,img){
+          var canvasID2=box2.getCanvasId();
+          var canvasID1=box1.getCanvasId();
+          this.canvasArr[canvasID1].draw(box2,img);
+          box2.setCanvasId(canvasID1);
+          this.canvasArr[canvasID2].draw(box1,img);
+          box1.setCanvasId(canvasID2);
 
           this.canvasArr[canvasID1].setDomId(box2.getId());
           this.canvasArr[canvasID2].setDomId(box1.getId());
-   			}
+        }
         o.random=function(boxes,img){          
            for(var i=0;i<boxes.length;i++){
               var r1=Math.floor(Math.random()*boxes.length);
@@ -300,24 +137,24 @@
               this.swapBox(boxes[r1],boxes[r2],img);
            }
         }
-   			o.getPosX=function(){
-   				return this.posX;
-   			}
-   			o.getPosY=function(){
-   				return this.posY;
-   			}
-   			o.getSide=function(){
-   				return this.side;
-   			}
-   			return o;
-   		}
-   		function createCanvas(id,side,posX,posY,dom,divDom){
-   			var o=new Object();
-   			o.id=id;
-   			o.side=side;
-   			o.posX=posX;
-   			o.posY=posY;
-   			o.dom=dom;
+        o.getPosX=function(){
+          return this.posX;
+        }
+        o.getPosY=function(){
+          return this.posY;
+        }
+        o.getSide=function(){
+          return this.side;
+        }
+        return o;
+      }
+      function createCanvas(id,side,posX,posY,dom,divDom){
+        var o=new Object();
+        o.id=id;
+        o.side=side;
+        o.posX=posX;
+        o.posY=posY;
+        o.dom=dom;
         o.divDom=divDom;
         o.setDomId=function(id){
           this.divDom.id=id;
@@ -339,14 +176,14 @@
           divDom.style.minWidth=this.side+"px";
           divDom.style.position="absolute";
         }
-   			
-   			o.draw=function(box,img){
+        
+        o.draw=function(box,img){
          
-    			var context=dom.getContext("2d");
-    			context.drawImage(img,box.getPositionX(),box.getPositionY(),side,side,0,0,side,side);
-   			}
-   			return o;
-   		}
+          var context=dom.getContext("2d");
+          context.drawImage(img,box.getPositionX(),box.getPositionY(),side,side,0,0,side,side);
+        }
+        return o;
+      }
       function check(boxes){
           for(var i=0;i<boxes.length;i++){
             if(!boxes[i].check()) return false;
@@ -575,7 +412,7 @@
         }
         return o;
       }
-    	window.onload=function(){
+      window.onload=function(){
 
         var timeDom=document.getElementById("timer"); 
         var timeObject=createTime(timeDom,60);  
@@ -584,6 +421,7 @@
         var normalDom=document.getElementById("normalRecord");
         var difficultDom=document.getElementById("difficultRecord");
         var hardDom=document.getElementById("hardRecord");
+
         var recorder=createRecord(easyDom,normalDom,difficultDom,hardDom);
 
         var game=createGame(timeObject,recorder);
@@ -591,9 +429,7 @@
 
         var buttonDiv=document.getElementById("choice");
         var buttons=createButtons(buttonDiv,game);
-        buttons.init();       
+        buttons.init(); 
+              
         recorder.showRecord();
-    	}
-    </script>
-    </body>
-</html>
+      }
